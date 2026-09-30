@@ -1,0 +1,38 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore HighPerformanceCatalogApi.slnx --configfile NuGet.Config
+
+      - name: Build
+        run: dotnet build HighPerformanceCatalogApi.slnx --configuration Release --no-restore
+
+      - name: Unit tests
+        run: dotnet test tests/Catalog.UnitTests/Catalog.UnitTests.csproj --configuration Release --no-build --no-restore
+
+      - name: Integration tests
+        run: dotnet test tests/Catalog.IntegrationTests/Catalog.IntegrationTests.csproj --configuration Release --no-build --no-restore
+
+      - name: Build Linux container
+        run: docker build --tag high-performance-catalog-api:ci .

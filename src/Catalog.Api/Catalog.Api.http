@@ -1,0 +1,32 @@
+@HostAddress = http://localhost:8080
+
+GET {{HostAddress}}/health
+
+###
+
+GET {{HostAddress}}/api/products/1
+Accept: application/json
+
+###
+
+GET {{HostAddress}}/api/products?page=1&pageSize=50
+Accept: application/json
+
+###
+
+GET {{HostAddress}}/api/products?afterId=50&pageSize=50
+Accept: application/json
+
+###
+
+GET {{HostAddress}}/api/products/search?categoryId=1&minPrice=10&maxPrice=500&minRating=4&pageSize=50
+Accept: application/json
+
+###
+
+GET {{HostAddress}}/api/products/top?take=20
+Accept: application/json
+
+###
+
+GET {{HostAddress}}/metrics
